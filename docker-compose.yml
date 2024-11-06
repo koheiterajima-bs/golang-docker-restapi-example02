@@ -1,0 +1,22 @@
+# docker-composeで構成するサービス(コンテナ)のリスト
+services:
+  db:
+    # MySQLのバージョン8.0の公式イメージを使用
+    image: mysql:8.0
+    # コンテナ名の命名
+    container_name: mysql_host_for_golang
+    # コンテナ内の環境変数
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: example
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    # コンテナ起動時に実行するコマンド
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # コンテナのデータの保存場所(ホストとコンテナ間でファイルを共有する)
+    volumes:
+      - ./mock/ddl:/docker-entrypoint-initdb.d
+    # ホスト側のポート33061をコンテナのMySQL標準ポート3306にマッピング
+    ports:
+      - 33061:3306
